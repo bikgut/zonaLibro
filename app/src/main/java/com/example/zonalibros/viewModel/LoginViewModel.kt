@@ -5,6 +5,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.navigation.NavHostController
 import com.example.zonalibros.models.LoginModel
 
 class LoginViewModel: ViewModel() {
@@ -39,13 +40,29 @@ class LoginViewModel: ViewModel() {
     //ALERTAS
 
     //NAVEGACION
-    var navega by mutableStateOf(false)
+    var navegaCliente by mutableStateOf(false)
         private set
 
-    fun cambiarNavegar(){
-        navega = false
+    fun cambiarNavegarC(){
+        navegaCliente = false
     }
-    //NAVEGACION
+
+    var navegaAdmin by mutableStateOf(false)
+        private set
+
+    fun cambiarNavegarA(){
+        navegaAdmin = true
+    }
+
+    var navegaRegistro by mutableStateOf(false)
+        private set
+
+    fun cambiarNavegarR(){
+        navegaRegistro = true
+    }
+
+    //NAVEGACION//
+    /////////////
 
     //VARIABLES CONFIRMAR
     var verConfirm by mutableStateOf(false)
@@ -83,8 +100,12 @@ class LoginViewModel: ViewModel() {
 
         if(loginViewModel.correo == "admin" && loginViewModel.clave == "admin"){
             //navegar vista admin
-            navega = true
-        }else if(loginViewModel.correo.isBlank() || loginViewModel.clave.isBlank()){
+            navegaAdmin = true
+
+        }else if(loginViewModel.correo == "cliente" && loginViewModel.clave == "cliente"){
+            navegaCliente = true
+
+        } else if(loginViewModel.correo.isBlank() || loginViewModel.clave.isBlank()){
             tituloAlerta = "Error al iniciar sesion."
             mensajeAlerta = "Correo y clave no pueden estar vacios."
             textoBtnAlerta = "Confirmar"

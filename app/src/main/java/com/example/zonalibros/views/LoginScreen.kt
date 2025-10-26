@@ -53,11 +53,22 @@ class LoginScreen(private val navController : NavHostController? = null){
         val correo = viewModel.loginViewModel.correo
         val clave = viewModel.loginViewModel.clave
 
-        val nav = viewModel.navega
+        val navC = viewModel.navegaCliente
+        val navA = viewModel.navegaAdmin
+        val navR = viewModel.navegaRegistro
 
-        if(nav == true){
-            navController?.navigate("inicio")
-            viewModel.cambiarNavegar()
+        if(navC == true){
+            navController?.navigate("cliente")
+            viewModel.cambiarNavegarC()
+        }
+        if(navA == true){
+            navController?.navigate("admin")
+            viewModel.cambiarNavegarA()
+        }
+
+        if(navR == true){
+            navController?.navigate("registro")
+            viewModel.cambiarNavegarR()
         }
 
         if(viewModel.verAlerta == true){
@@ -156,6 +167,12 @@ class LoginScreen(private val navController : NavHostController? = null){
                 )
             {
                 Text("Acceder")
+            }
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            Button(onClick = {navController?.navigate("registro")}){
+                Text("Registrarse")
             }
         }
     }
