@@ -93,7 +93,7 @@ class LoginScreen(private val navController : NavHostController? = null){
             )
         }
 
-        var transicion = rememberInfiniteTransition()
+        val transicion = rememberInfiniteTransition()
 
         val offsetY by transicion.animateFloat(
             initialValue = 0f,
