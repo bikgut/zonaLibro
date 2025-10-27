@@ -10,7 +10,6 @@ import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -19,7 +18,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -30,6 +34,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -47,9 +53,9 @@ import com.example.zonalibros.viewModel.LoginViewModel
 class LoginScreen(private val navController : NavHostController? = null){
 
     @Composable
-    fun login(){
+    fun login() {
 
-        val viewModel = viewModel <LoginViewModel>()
+        val viewModel = viewModel<LoginViewModel>()
         val correo = viewModel.loginViewModel.correo
         val clave = viewModel.loginViewModel.clave
 
@@ -71,7 +77,10 @@ class LoginScreen(private val navController : NavHostController? = null){
             viewModel.cambiarNavegarR()
         }
 
+        val haptic = LocalHapticFeedback.current
+
         if(viewModel.verAlerta == true){
+            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
             mostrarAlerta(
                 titulo = viewModel.tituloAlerta,
                 mensaje = viewModel.mensajeAlerta,
@@ -82,6 +91,7 @@ class LoginScreen(private val navController : NavHostController? = null){
         }
 
         if(viewModel.verConfirm == true){
+            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
             mostrarConfirm(
                 titulo = viewModel.tituloConfirm,
                 mensaje = viewModel.mensajeConfirm,
@@ -112,15 +122,27 @@ class LoginScreen(private val navController : NavHostController? = null){
             if(cambioColor) Color.Transparent else Color.Black
         )
 
+        val colorTitulo by animateColorAsState(
+            if(cambioColor) Color.Black else Color.White
+        )
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .background(colorCampo)
-                .padding(32.dp)
-                .clickable{cambioColor = !cambioColor},
+                .padding(32.dp),
             verticalArrangement = Arrangement.Center
         )
         {
+            IconButton(
+                onClick = {cambioColor = !cambioColor}
+            ){
+                Icon(
+                    imageVector = Icons.Default.Refresh,
+                    contentDescription = "Cambiar color de fondo"
+                )
+            }
+
             Image(
                 painter = painterResource(id = R.drawable.zonalogo),
                 contentDescription = "logo",
@@ -131,6 +153,7 @@ class LoginScreen(private val navController : NavHostController? = null){
                 text = "Iniciar Sesion",
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
+                color = colorTitulo,
                 modifier = Modifier.padding(32.dp).fillMaxWidth().offset(y = offsetY.dp),
                 textAlign = TextAlign.Center
             )
@@ -140,7 +163,6 @@ class LoginScreen(private val navController : NavHostController? = null){
                 onValueChange = {viewModel.cambioCorreo(it)},
                 label = {Text("Correo")},
                 modifier = Modifier.fillMaxWidth()
-                    .clickable{cambioColor = !cambioColor}
                     .padding(20.dp)
             )
 
@@ -151,7 +173,6 @@ class LoginScreen(private val navController : NavHostController? = null){
                 onValueChange = {viewModel.cambioClave(it)},
                 label = {Text("Clave")},
                 modifier = Modifier.fillMaxWidth()
-                    .clickable{cambioColor = !cambioColor}
                     .padding(20.dp),
                 visualTransformation = PasswordVisualTransformation()
             )
@@ -160,8 +181,11 @@ class LoginScreen(private val navController : NavHostController? = null){
 
             Button(
                 onClick = {viewModel.auth()},
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.Green,
+                    contentColor = Color.Black
+                ),
                 modifier = Modifier.fillMaxWidth()
-                    .clickable{cambioColor = !cambioColor}
                     .padding(20.dp),
 
                 )
@@ -171,7 +195,12 @@ class LoginScreen(private val navController : NavHostController? = null){
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            Button(onClick = {navController?.navigate("registro")}){
+            Button(onClick = {navController?.navigate("registro")},
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color.Green,
+                contentColor = Color.Black
+
+            )){
                 Text("Registrarse")
             }
         }
