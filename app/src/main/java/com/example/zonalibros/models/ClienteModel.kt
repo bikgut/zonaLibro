@@ -1,7 +1,12 @@
 package com.example.zonalibros.models
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+
+@Entity(tableName = "cliente")
 data class ClienteModel (
-    val id:Int = 0,
+    @PrimaryKey(autoGenerate = true) val id:Int = 0,
     val nombre:String,
     val direccion:String,
     val telefono:String,

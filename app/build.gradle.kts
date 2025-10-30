@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    id("org.jetbrains.kotlin.kapt")
 }
 
 android {
@@ -42,6 +43,23 @@ android {
 }
 
 dependencies {
+
+    //Camara
+    implementation("androidx.camera:camera-camera2:1.3.0")
+    implementation("androidx.camera:camera-lifecycle:1.3.0")
+    implementation("androidx.camera:camera-view:1.3.0")
+    implementation("androidx.camera:camera-extensions:1.3.0")
+    implementation("io.coil-kt:coil-compose:2.4.0")
+    //camara
+
+    //dependencias de room
+    implementation ("androidx.room:room-runtime:2.8.2")
+    kapt ("androidx.room:room-compiler:2.8.2")
+    implementation ("androidx.room:room-ktx:2.8.2")
+    //dependencias de room
+
+    implementation("androidx.compose.material:material:1.4.3")
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
