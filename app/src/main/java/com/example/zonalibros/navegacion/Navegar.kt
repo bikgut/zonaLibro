@@ -23,7 +23,7 @@ fun navegar(viewModel: ProductoViewModel){
 
     NavHost(
         navController = navController,
-        startDestination = "cliente"
+        startDestination = "registro"
     )
     {
         composable("login"){
