@@ -9,6 +9,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.zonalibros.dao.ProductoDao
 import com.example.zonalibros.dataBase.ProductoRepository
 import com.example.zonalibros.dataBase.ProductoViewModelFactory
+import com.example.zonalibros.viewModel.CarritoViewModel
 import com.example.zonalibros.viewModel.ProductoViewModel
 import com.example.zonalibros.views.AdminScreen
 import com.example.zonalibros.views.ClienteScreen
@@ -18,19 +19,19 @@ import com.example.zonalibros.views.RegistroScreen
 
 
 @Composable
-fun navegar(viewModel: ProductoViewModel){
+fun navegar(viewModel: ProductoViewModel, carritoViewModel: CarritoViewModel){
     val navController = rememberNavController()
 
     NavHost(
         navController = navController,
-        startDestination = "registro"
+        startDestination = "admin"
     )
     {
         composable("login"){
             LoginScreen(navController).login()
         }
         composable("cliente"){
-            ClienteScreen(navController, viewModel).cliente()
+            ClienteScreen(navController, viewModel, carritoViewModel).cliente()
         }
         composable("admin"){
             AdminScreen(navController).admin()

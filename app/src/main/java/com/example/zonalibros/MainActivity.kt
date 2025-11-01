@@ -12,10 +12,13 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.room.Room
 import com.example.zonalibros.dataBase.AppDataBase
+import com.example.zonalibros.dataBase.CarritoRepository
+import com.example.zonalibros.dataBase.CarritoViewModelFactory
 import com.example.zonalibros.dataBase.ProductoRepository
 import com.example.zonalibros.dataBase.ProductoViewModelFactory
 import com.example.zonalibros.navegacion.navegar
 import com.example.zonalibros.ui.theme.ZonaLibrosTheme
+import com.example.zonalibros.viewModel.CarritoViewModel
 import com.example.zonalibros.viewModel.ProductoViewModel
 
 class MainActivity : ComponentActivity() {
@@ -35,6 +38,21 @@ class MainActivity : ComponentActivity() {
         )
     }
 
+    private val carritoViewModel: CarritoViewModel by viewModels {
+        CarritoViewModelFactory(
+            CarritoRepository(
+                Room.databaseBuilder(
+                    applicationContext,
+                    AppDataBase::class.java,
+                    "app_database"
+                )
+                    .fallbackToDestructiveMigration()
+                    .build()
+                    .carritoDao()
+            )
+        )
+    }
+
     override fun onCreate(savedInstanceState: Bundle?){
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -44,7 +62,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxWidth(),
                     color = MaterialTheme.colorScheme.background
                 ){
-                    navegar(viewModel)
+                    navegar(viewModel, carritoViewModel)
                 }
             }
         }
