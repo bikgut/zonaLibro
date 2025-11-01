@@ -54,6 +54,7 @@ dependencies {
 
     //dependencias de room
     implementation ("androidx.room:room-runtime:2.8.2")
+    implementation(libs.androidx.compose.foundation)
     kapt ("androidx.room:room-compiler:2.8.2")
     implementation ("androidx.room:room-ktx:2.8.2")
     //dependencias de room

@@ -22,6 +22,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -178,6 +179,14 @@ class LoginScreen(private val navController : NavHostController? = null){
             )
 
             Spacer(modifier = Modifier.height(16.dp))
+
+            if(viewModel.cargando){
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally)
+                        .padding(16.dp)
+                )
+            }
 
             Button(
                 onClick = {viewModel.auth()},

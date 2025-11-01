@@ -2,12 +2,26 @@ package com.example.zonalibros.views
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 
 
@@ -16,15 +30,67 @@ class AdminScreen(private val navController: NavHostController? = null){
     @Composable
     fun admin(){
 
+        var mostrarDialogo by remember { mutableStateOf(false) }
+
+        if(mostrarDialogo) {
+            AlertDialog(
+                onDismissRequest = {mostrarDialogo = false},
+                title = {Text("cerrar sesion")},
+                text = {Text("Estas seguro de que quieres cerrar sesion?")},
+                confirmButton = {
+                    TextButton(
+                        onClick = {
+                            mostrarDialogo = false
+                            navController?.navigate("login") {
+                                popUpTo("admin") {inclusive = true}
+                            }
+                        }
+                    ) {
+                        Text("Salir")
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = {mostrarDialogo = false}) {
+                        Text("cancelar")
+                    }
+                }
+
+            )
+        }
+
         Column(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.fillMaxSize().padding(32.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ){
-            Text("Panel de Administrador")
-            Button(onClick = {navController?.popBackStack() }){
+            Text(text = "Panel de Administrador",
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center
+            )
+
+            Button(
+                onClick = {navController?.navigate("productos")},
+                modifier = Modifier.fillMaxWidth()
+            ){
+                Text("gestionar Productos")
+            }
+
+            Button(
+                onClick = {navController?.navigate("usuarios")},
+                modifier = Modifier.fillMaxWidth()
+            ){
+                Text("gestionar Usuarios")
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Button(onClick = {mostrarDialogo = true},
+                modifier = Modifier.fillMaxWidth())
+            {
                 Text("Cerrar sesion")
             }
+
         }
     }
 }

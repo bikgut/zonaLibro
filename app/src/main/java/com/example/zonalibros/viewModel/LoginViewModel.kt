@@ -5,7 +5,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.zonalibros.models.LoginModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class LoginViewModel: ViewModel() {
 
@@ -18,6 +21,9 @@ class LoginViewModel: ViewModel() {
     fun cambioClave(nuevaClave:String){
         loginViewModel = loginViewModel.copy(clave = nuevaClave)
     }
+
+    var cargando by mutableStateOf(false)
+    private set
 
     //ALERTAS
 
@@ -97,24 +103,32 @@ class LoginViewModel: ViewModel() {
         Log.d("Correo", loginViewModel.correo)
         Log.d("Clave", loginViewModel.clave)
 
-        if(loginViewModel.correo == "admin" && loginViewModel.clave == "admin"){
-            //navegar vista admin
-            navegaAdmin = true
+        cargando = true
+        viewModelScope.launch {
+            delay(5000)
 
-        }else if(loginViewModel.correo == "cliente" && loginViewModel.clave == "cliente"){
-            navegaCliente = true
+            if (loginViewModel.correo == "admin" && loginViewModel.clave == "admin") {
+                //navegar vista admin
+                navegaAdmin = true
 
-        } else if(loginViewModel.correo.isBlank() || loginViewModel.clave.isBlank()){
-            tituloAlerta = "Error al iniciar sesion."
-            mensajeAlerta = "Correo y clave no pueden estar vacios."
-            textoBtnAlerta = "Confirmar"
-            verAlerta = true
-        }else {
+            } else if (loginViewModel.correo == "cliente" && loginViewModel.clave == "cliente") {
+                navegaCliente = true
 
-            tituloAlerta = "Error de credenciales."
-            mensajeAlerta = "El Correo o la Clave son incorrectos.\n intentelo nuevamente."
-            textoBtnAlerta = "Aceptar"
-            verAlerta = true
+            } else if (loginViewModel.correo.isBlank() || loginViewModel.clave.isBlank()) {
+                tituloAlerta = "Error al iniciar sesion."
+                mensajeAlerta = "Correo y clave no pueden estar vacios."
+                textoBtnAlerta = "Confirmar"
+                verAlerta = true
+                cargando = false
+            } else {
+
+                tituloAlerta = "Error de credenciales."
+                mensajeAlerta = "El Correo o la Clave son incorrectos.\n intentelo nuevamente."
+                textoBtnAlerta = "Aceptar"
+                verAlerta = true
+                cargando = false
+            }
+            cargando = false
         }
     }
 
