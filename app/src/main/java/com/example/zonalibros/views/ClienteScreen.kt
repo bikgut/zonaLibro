@@ -38,7 +38,7 @@ class ClienteScreen(private val navController: NavHostController? = null, privat
     @Composable
     fun cliente(){
         val listaProd by viewModel.listaProds.collectAsState()
-        val carrito by carritoViewModel.carrito.collectAsState()
+
 
         Column(
             modifier = Modifier.fillMaxSize().padding(20.dp)
@@ -91,22 +91,6 @@ class ClienteScreen(private val navController: NavHostController? = null, privat
                         }
                     }
                 }
-            Divider(thickness = 2.dp)
-            Text("Carrito de compras", fontWeight = FontWeight.Bold)
-
-            LazyColumn {
-                items(carrito){ item ->
-                    Row(
-                        Modifier.fillMaxWidth().padding(8.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ){
-                        Text("${item.titulo} x${item.cantidad}")
-                        Button(onClick = {carritoViewModel.eliminarProd(item)}){
-                            Text("Eliminar")
-                        }
-                    }
-            }
-            }
         }
 
     }

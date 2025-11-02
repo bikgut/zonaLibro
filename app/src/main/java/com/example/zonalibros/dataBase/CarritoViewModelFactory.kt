@@ -9,7 +9,7 @@ class CarritoViewModelFactory(private val carritoRepository: CarritoRepository) 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(CarritoViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return CarritoViewModel(CarritoViewModel) as T
+            return CarritoViewModel(carritoRepository ) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

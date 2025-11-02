@@ -1,6 +1,9 @@
 package com.example.zonalibros.viewModel
 
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.zonalibros.dataBase.ProductoRepository
@@ -32,6 +35,22 @@ class ProductoViewModel (private val repository: ProductoRepository): ViewModel(
     val mostrarDialogo: StateFlow<Boolean> = _mostrarDialogo
 
     private val _productoEliminar = MutableStateFlow<ProductoModel?>(null)
+
+    var verAlerta by mutableStateOf(false)
+        private set
+
+    var tituloAlerta by mutableStateOf("")
+        private set
+
+    var mensajeAlerta by mutableStateOf("")
+        private set
+
+    var textoBtnAlerta by mutableStateOf("")
+        private set
+
+    fun descartarAlerta(){
+        verAlerta = false
+    }
 
 
     //limpiar campos form
@@ -66,7 +85,13 @@ class ProductoViewModel (private val repository: ProductoRepository): ViewModel(
     }
 
     //guardar producto
-    fun guardarProducto() {
+    fun guardarProducto(onError: (String) -> Unit = {}) {
+        if(titulo.value.isBlank() || precio.value.isBlank() || autor.value.isBlank() || stock.value.isBlank()){
+            tituloAlerta = "Error al ingresar el producto."
+            mensajeAlerta = "Todos los campos son obligatorios."
+            textoBtnAlerta = "Confirmar"
+            verAlerta = true
+        }
         val idInt = id.value.toIntOrNull()?: 0
         val stockInt = stock.value.toIntOrNull() ?: 0
         val producto = ProductoModel(

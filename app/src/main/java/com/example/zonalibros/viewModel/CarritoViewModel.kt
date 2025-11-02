@@ -20,16 +20,21 @@ class CarritoViewModel(private val repository: CarritoRepository) : ViewModel() 
 
     private fun calcularTotal(){
         viewModelScope.launch {
-            listaCarrito.value.let { lista -> _total.value = lista.sumOf { it.precio * it.cantidad }}
+            listaCarrito.value.let { lista -> _total.value = lista.sumOf { it.precio.toDouble() * it.cantidad }}
         }
     }
 
-    fun agregarProd(item: CarritoModel){
+    fun agregarProd(producto: ProductoModel){
+        val item = CarritoModel(
+            productoId = producto.id,
+            titulo = producto.titulo,
+            precio = producto.precio,
+            cantidad = 1
+        )
         viewModelScope.launch {
             repository.agregar(item)
             calcularTotal()
         }
-
     }
 
     fun eliminarDelCarrito(item: CarritoModel){

@@ -33,12 +33,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import com.example.zonalibros.alertas.mostrarAlerta
 import com.example.zonalibros.dataBase.AppDataBase
 import com.example.zonalibros.dataBase.ProductoRepository
 import com.example.zonalibros.dataBase.ProductoViewModelFactory
@@ -57,8 +60,23 @@ class ProductoScreen (private val navController: NavHostController? = null, priv
         val stock by viewModel.stock.collectAsState()
         val listaProd by viewModel.listaProds.collectAsState()
 
+        val mensaje = remember {mutableStateOf("")}
+
         var mostrarAlert by remember { mutableStateOf(false) }
         var prodSelect by remember {mutableStateOf<ProductoModel?>(null)}
+
+        val haptic = LocalHapticFeedback.current
+
+        if(viewModel.verAlerta == true){
+            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+            mostrarAlerta(
+                titulo = viewModel.tituloAlerta,
+                mensaje = viewModel.mensajeAlerta,
+                onDismiss = {viewModel.descartarAlerta()},
+                onConfirm = {viewModel.descartarAlerta()},
+                textoBtnConfirmar = viewModel.textoBtnAlerta
+            )
+        }
 
         Column(modifier = Modifier.padding(20.dp).systemBarsPadding()) {
 
@@ -141,6 +159,13 @@ class ProductoScreen (private val navController: NavHostController? = null, priv
                         ){
                             IconButton (
                             onClick = {
+                                if (viewModel.id.value.isNotEmpty()) {
+                                    viewModel.actualizarProd()
+                                }else{
+                                    viewModel.guardarProducto { mensajeError ->
+                                        mensaje.value = mensajeError
+                                    }
+                                }
                                 viewModel.onTituloChange(product.titulo)
                                 viewModel.onPrecioChange(product.precio)
                                 viewModel.onAutorChange(product.autor)
@@ -176,6 +201,7 @@ class ProductoScreen (private val navController: NavHostController? = null, priv
                     confirmButton = {
                         TextButton(onClick = {
                             viewModel.eliminarProd(prodSelect!!)
+                            mostrarAlert = false
                         }) {
                             Text("Eliminar")
                         }

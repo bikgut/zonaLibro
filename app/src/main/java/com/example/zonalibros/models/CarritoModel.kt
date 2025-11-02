@@ -10,5 +10,5 @@ data class CarritoModel (
     val productoId: Int,
     val titulo: String,
     val precio: String,
-    val cantidad: Int
+    val cantidad: Int = 1
 )
