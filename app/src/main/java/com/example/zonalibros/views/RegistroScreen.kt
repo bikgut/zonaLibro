@@ -205,10 +205,5 @@ class RegistroScreen(private val navController: NavHostController? = null){
                 Text("Registrarse")
             }
         }
-
-
-
-
-
     }
 }

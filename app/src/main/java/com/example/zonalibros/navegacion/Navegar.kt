@@ -24,7 +24,7 @@ fun navegar(viewModel: ProductoViewModel, carritoViewModel: CarritoViewModel){
 
     NavHost(
         navController = navController,
-        startDestination = "admin"
+        startDestination = "login"
     )
     {
         composable("login"){
