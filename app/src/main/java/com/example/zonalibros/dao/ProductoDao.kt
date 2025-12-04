@@ -9,7 +9,7 @@ import androidx.room.Update
 import com.example.zonalibros.models.ProductoModel
 import kotlinx.coroutines.flow.Flow
 
-
+/*
 @Dao
 interface ProductoDao {
 
@@ -29,3 +29,5 @@ interface ProductoDao {
     fun obtenerPorId(id: Int): ProductoModel?
 
 }
+
+ */

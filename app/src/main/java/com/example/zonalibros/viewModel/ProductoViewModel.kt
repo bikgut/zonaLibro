@@ -6,15 +6,39 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.zonalibros.dataBase.ProductoRepository
+//import com.example.zonalibros.dataBase.ProductoRepository
+import com.example.zonalibros.models.ProductoAgregar
 import com.example.zonalibros.models.ProductoModel
+import com.example.zonalibros.models.ProductoState
+import com.example.zonalibros.repository.ProductoService
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-class ProductoViewModel (private val repository: ProductoRepository): ViewModel() {
+class ProductoViewModel: ViewModel() {
+
+    private val productoService = ProductoService.instance
+
+    var state by mutableStateOf(ProductoState())
+        private set
+
+    init {
+        obtenerProductos()
+    }
+
+    fun cambiarTitulo(nuevoTitulo: String){ state = state.copy(titulo = nuevoTitulo) }
+
+    fun cambiarPrecio(nuevoPrecio: String){ state = state.copy(precio = nuevoPrecio) }
+
+    fun cambiarAutor(nuevoAutor: String){ state = state.copy(autor = nuevoAutor) }
+
+    fun cambiarStock(nuevoStock: String){ state = state.copy(stock = nuevoStock) }
+
+    fun cambiarImagen(nuevaImagen: String){ state = state.copy(imagenUrl = nuevaImagen) }
+
+    fun cambiarId(nuevoId: Int){ state = state.copy(id = nuevoId) }
+
+
 
     private val _id = MutableStateFlow("")
     val id: StateFlow<String> = _id
@@ -30,6 +54,9 @@ class ProductoViewModel (private val repository: ProductoRepository): ViewModel(
 
     private val _stock = MutableStateFlow("")
     val stock: StateFlow<String> = _stock
+
+    private val _imagen = MutableStateFlow("")
+    val imagen: StateFlow<String> = _imagen
 
     private val _mostrarDialogo = MutableStateFlow(false)
     val mostrarDialogo: StateFlow<Boolean> = _mostrarDialogo
@@ -55,16 +82,29 @@ class ProductoViewModel (private val repository: ProductoRepository): ViewModel(
 
     //limpiar campos form
     private fun limpiarCampos(){
-        _id.value = ""
-        _titulo.value = ""
-        _precio.value = ""
-        _autor.value = ""
-        _stock.value = ""
-
+        state = state.copy(
+            id = null,
+            titulo = "",
+            precio = "",
+            autor = "",
+            stock = "",
+            imagenUrl = ""
+        )
     }
 
     //obtener todos
-    val listaProds = repository.obtenerProds().stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
+    // val listaProds = repository.obtenerProds().stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
+    fun obtenerProductos(){
+        viewModelScope.launch {
+            try {
+                val listaProd = productoService.listarProductos()
+                state = state.copy(productos = listaProd)
+
+            }catch (e: Exception){
+
+            }
+        }
+    }
 
 
     //actualizar valores
@@ -84,49 +124,97 @@ class ProductoViewModel (private val repository: ProductoRepository): ViewModel(
         _stock.value = nuevoStock
     }
 
+    fun onImagenChange(nuevoImagen: String){
+        _imagen.value = nuevoImagen
+    }
+
     //guardar producto
-    fun guardarProducto(onError: (String) -> Unit = {}) {
-        if(titulo.value.isBlank() || precio.value.isBlank() || autor.value.isBlank() || stock.value.isBlank()){
+    fun guardarProducto() {
+        if(state.titulo.isBlank() || state.precio.isBlank() || state.autor.isBlank() || state.stock.isBlank() ||state.imagenUrl.isBlank()){
             tituloAlerta = "Error al ingresar el producto."
             mensajeAlerta = "Todos los campos son obligatorios."
             textoBtnAlerta = "Confirmar"
             verAlerta = true
+            return
         }
-        val idInt = id.value.toIntOrNull()?: 0
-        val stockInt = stock.value.toIntOrNull() ?: 0
-        val producto = ProductoModel(
-            titulo = titulo.value,
-            precio = precio.value,
-            autor = autor.value,
-            stock = stockInt
-        )
         viewModelScope.launch {
-            repository.insertProd(producto)
-            limpiarCampos()
+            try {
+                val stockInt = state.stock.toIntOrNull() ?: 0
+
+                val nuevoProducto = ProductoAgregar(
+                    titulo = state.titulo,
+                    precio = state.precio.toInt(),
+                    autor = state.autor,
+                    stock = state.stock.toInt(),
+                    imagenUrl = state.imagenUrl
+                )
+
+                productoService.agregarProducto(nuevoProducto)
+                obtenerProductos()
+
+                state = state.copy(
+                    titulo = "",
+                    precio = "",
+                    autor = "",
+                    stock = "",
+                    imagenUrl = ""
+                )
+
+            }catch (e: Exception){
+                tituloAlerta = "Error"
+                mensajeAlerta = "No se pudo conectar con el servidor."
+                textoBtnAlerta = "Aceptar"
+                verAlerta = true
+
+            }
         }
     }
 
     fun iniciarEdicion(producto: ProductoModel){
-        _id.value = producto.id.toString()
-        _titulo.value = producto.titulo
-        _autor.value = producto.autor
-        _precio.value = producto.precio
-        _stock.value = producto.stock.toString()
+        state = state.copy(
+            id = producto.id,
+            titulo = producto.titulo,
+            autor = producto.autor,
+            precio= producto.precio.toString(),
+            stock = producto.stock.toString(),
+            imagenUrl = producto.imagenUrl
+        )
+
     }
 
-    fun actualizarProd(){
-        val idProducto = id.value.toIntOrNull() ?: 0
-        val stockInt = stock.value.toIntOrNull() ?: 0
-        val prodActualizado = ProductoModel(
-            id = idProducto,
-            titulo = titulo.value,
-            precio = precio.value,
-            autor = autor.value,
-            stock = stockInt
+    fun buscarProd(productoId: Int){
+        viewModelScope.launch {
+            try {
+                val productoEncontrado = productoService.obtenerPorId(productoId)
+                cambiarTitulo(productoEncontrado.titulo)
+                cambiarAutor(productoEncontrado.autor)
+                cambiarPrecio(productoEncontrado.precio.toString())
+                cambiarStock(productoEncontrado.stock.toString())
+                cambiarImagen(productoEncontrado.imagenUrl)
+                cambiarId(productoEncontrado.id)
+            }catch (e: Exception){
+
+            }
+        }
+    }
+
+
+    fun actualizarProd(producto: ProductoModel) {
+
+        state = state.copy(
+            titulo = producto.titulo ,
+            precio = producto.precio.toString(),
+            autor = producto.autor,
+            stock = producto.stock.toString(),
+            imagenUrl = producto.imagenUrl
         )
         viewModelScope.launch {
-            repository.actualizarProd(prodActualizado)
-            limpiarCampos()
+            try {
+                productoService.actualizarProducto(producto)
+            }catch (e: Exception){
+
+            }
+
         }
     }
 
@@ -143,16 +231,23 @@ class ProductoViewModel (private val repository: ProductoRepository): ViewModel(
     fun eliminarconfirm(){
         val producto = _productoEliminar.value ?: return
         viewModelScope.launch {
-            repository.borrarProd(producto)
+            productoService.eliminarProducto(producto.id)
             _productoEliminar.value = null
             _mostrarDialogo.value = false
         }
     }
 
     //eliminar producto
-    fun eliminarProd(producto: ProductoModel) {
+    fun eliminarProd(productoId : Int) {
         viewModelScope.launch {
-            repository.borrarProd(producto)
+            try {
+                if(productoId != null){
+                    productoService.eliminarProducto(productoId)
+                }
+                obtenerProductos()
+            }catch (e: Exception){
+
+            }
         }
     }
 

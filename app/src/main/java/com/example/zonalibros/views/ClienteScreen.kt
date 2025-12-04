@@ -30,15 +30,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.example.zonalibros.viewModel.CarritoViewModel
+//import com.example.zonalibros.viewModel.CarritoViewModel
 import com.example.zonalibros.viewModel.ProductoViewModel
 
 
-class ClienteScreen(private val navController: NavHostController? = null, private val viewModel: ProductoViewModel, private val carritoViewModel: CarritoViewModel){
+class ClienteScreen(private val navController: NavHostController? = null, private val viewModel: ProductoViewModel){
 
     @Composable
     fun cliente(){
-        val listaProd by viewModel.listaProds.collectAsState()
+        //val listaProd by viewModel.listaProds.collectAsState()
 
 
         Column(
@@ -67,6 +67,7 @@ class ClienteScreen(private val navController: NavHostController? = null, privat
                 verticalArrangement = Arrangement.spacedBy(10.dp),
                 modifier = Modifier.fillMaxSize()
             ){
+                /*
                 items(listaProd){product ->
                     Card(
                         modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
@@ -90,12 +91,14 @@ class ClienteScreen(private val navController: NavHostController? = null, privat
                             Divider()
                             }
                         }
+
+                 */
                     }
                 }
         }
 
     }
-}
+
 
 
 

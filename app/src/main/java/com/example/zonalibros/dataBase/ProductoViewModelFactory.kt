@@ -3,7 +3,7 @@ package com.example.zonalibros.dataBase
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModel
 import com.example.zonalibros.viewModel.ProductoViewModel
-
+/*
 class ProductoViewModelFactory (private val repository: ProductoRepository): ViewModelProvider.Factory {
     override fun <T: ViewModel> create(modelClass: Class<T>): T {
         if(modelClass.isAssignableFrom(ProductoViewModel::class.java)){
@@ -13,3 +13,5 @@ class ProductoViewModelFactory (private val repository: ProductoRepository): Vie
         throw IllegalArgumentException("unknown ViewModel class")
     }
 }
+
+ */

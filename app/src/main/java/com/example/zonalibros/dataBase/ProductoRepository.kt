@@ -1,9 +1,9 @@
 package com.example.zonalibros.dataBase
 
-import com.example.zonalibros.dao.ProductoDao
+//import com.example.zonalibros.dao.ProductoDao
 import com.example.zonalibros.models.ProductoModel
 import kotlinx.coroutines.flow.Flow
-
+/*
 class ProductoRepository (private val productoDao: ProductoDao) {
 
     suspend fun insertProd(producto: ProductoModel) {
@@ -26,3 +26,5 @@ class ProductoRepository (private val productoDao: ProductoDao) {
         return productoDao.obtenerPorId(id)
     }
 }
+
+ */

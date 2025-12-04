@@ -56,14 +56,14 @@ class LoginViewModel: ViewModel() {
         private set
 
     fun cambiarNavegarA(){
-        navegaAdmin = true
+        navegaAdmin = false
     }
 
     var navegaRegistro by mutableStateOf(false)
         private set
 
     fun cambiarNavegarR(){
-        navegaRegistro = true
+        navegaRegistro = false
     }
 
     //NAVEGACION//

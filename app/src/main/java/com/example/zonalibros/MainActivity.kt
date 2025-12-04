@@ -11,18 +11,18 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.room.Room
-import com.example.zonalibros.dataBase.AppDataBase
-import com.example.zonalibros.dataBase.CarritoRepository
-import com.example.zonalibros.dataBase.CarritoViewModelFactory
-import com.example.zonalibros.dataBase.ProductoRepository
-import com.example.zonalibros.dataBase.ProductoViewModelFactory
+//import com.example.zonalibros.dataBase.AppDataBase
+//import com.example.zonalibros.dataBase.CarritoRepository
+//import com.example.zonalibros.dataBase.CarritoViewModelFactory
+//import com.example.zonalibros.dataBase.ProductoRepository
+//import com.example.zonalibros.dataBase.ProductoViewModelFactory
 import com.example.zonalibros.navegacion.navegar
 import com.example.zonalibros.ui.theme.ZonaLibrosTheme
-import com.example.zonalibros.viewModel.CarritoViewModel
+//import com.example.zonalibros.viewModel.CarritoViewModel
 import com.example.zonalibros.viewModel.ProductoViewModel
 
 class MainActivity : ComponentActivity() {
-
+/*
     private val viewModel : ProductoViewModel by viewModels {
         ProductoViewModelFactory(
             ProductoRepository(
@@ -53,6 +53,11 @@ class MainActivity : ComponentActivity() {
         )
     }
 
+ */
+private val productoViewModel: ProductoViewModel by viewModels()
+private val viewModel: ProductoViewModel by viewModels()
+
+
     override fun onCreate(savedInstanceState: Bundle?){
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -62,7 +67,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxWidth(),
                     color = MaterialTheme.colorScheme.background
                 ){
-                    navegar(viewModel, carritoViewModel)
+                    navegar(viewModel)
                 }
             }
         }

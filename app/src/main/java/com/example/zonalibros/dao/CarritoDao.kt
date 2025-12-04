@@ -8,7 +8,7 @@ import androidx.room.Query
 import com.example.zonalibros.models.CarritoModel
 import kotlinx.coroutines.flow.Flow
 
-
+/*
 @Dao
 interface CarritoDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -23,3 +23,5 @@ interface CarritoDao {
     @Query("DELETE FROM carrito")
     suspend fun vaciarCarrito()
 }
+
+ */
