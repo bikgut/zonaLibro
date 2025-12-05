@@ -17,7 +17,7 @@ import retrofit2.http.Path
 interface ProductoService {
     companion object{
         val instance =
-            Retrofit.Builder().baseUrl("http://192.168.1.105:8080/")
+            Retrofit.Builder().baseUrl("http://192.168.1.101:8080/")
                 .addConverterFactory(MoshiConverterFactory.create())
                 .client(OkHttpClient.Builder().build())
                 .build().create(ProductoService::class.java)

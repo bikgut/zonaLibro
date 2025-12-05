@@ -111,7 +111,7 @@ class LoginScreen(private val navController : NavHostController? = null){
             targetValue = 20f,
             animationSpec = infiniteRepeatable(
                 animation = tween(
-                    durationMillis = 500,
+                    durationMillis = 100,
                     easing = FastOutSlowInEasing
                 ),
                 repeatMode = RepeatMode.Reverse
